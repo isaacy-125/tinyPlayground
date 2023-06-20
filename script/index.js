@@ -1,6 +1,7 @@
 import { config } from '../config/config.js'
 import { resources } from '../resources/index.js';
 import DisplayObjectStage from '../stages/displayObject.js';
+import MoveStage from '../stages/moveStage.js';
 
 Tiny.app = new Tiny.Application({
     ...config,

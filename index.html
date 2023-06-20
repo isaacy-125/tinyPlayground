@@ -15,11 +15,30 @@
             <div class="catalogueList-main">
                 <div class="catalogueList-main-title">1.显示对象</div>
                 <div class="catalogueList-main-title-children">
-                    <div class="catalogueList-main-title">1.Container</div>
+                    <div role="button" id="displayObjectStage" class="catalogueList-main-title">1.Container</div>
+                </div>
+                <div class="catalogueList-main-title">2.动作</div>
+                <div class="catalogueList-main-title-children">
+                    <div role="button" id="moveStage" class="catalogueList-main-title">1.动作</div>
                 </div>
             </div>
         </div>
     </div>
     <script type="module" src="./script/index.js"></script>
+    <script type="module">
+        import displayObjectStage from './stages/displayObject.js';
+        import moveStage from './stages/moveStage.js';
+
+        const scenes = {
+            'displayObjectStage': displayObjectStage,
+            'moveStage': moveStage,
+        }
+        document.addEventListener('click', (event) => {
+            if (event.target.role === 'button') {
+                const stage = new scenes[event.target.id]();
+                Tiny.app.replaceScene(stage);
+            }
+        })
+    </script>
 </body>
 </html>

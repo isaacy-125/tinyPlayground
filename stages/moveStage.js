@@ -2,10 +2,83 @@ class MoveStage extends Tiny.Container {
   constructor() {
     super();
     this.initMoveToSprite();
-    this.initMoveBySprite();
+    this.initMoveByAndBackSprite();
     this.initScaleToOrBySprite();
     this.initRotateToOrBySprite();
     this.initJumpToSprite();
+    this.initBlinkSprite();
+    this.initFadeInOrOutOrToSprite();
+    this.eventsHandler();
+  }
+  eventsHandler() {
+    // onComplete
+    const texture = Tiny.TextureCache['ant'];
+    const sprite = new Tiny.Sprite(texture);
+    sprite.setScale(0.5);
+    sprite.setPosition(0, 350);
+    const fadeInFunc = Tiny.FadeIn(1000);
+    const fadeOutFunc = Tiny.FadeOut(1000);
+    fadeOutFunc.onComplete = function() {
+      sprite.runAction(fadeInFunc);
+    };
+    fadeInFunc.onComplete = function() {
+      sprite.runAction(fadeOutFunc);
+    };
+    sprite.runAction(fadeOutFunc);
+    this.addChild(sprite);
+
+    // onUpdate
+    const texture2 = Tiny.TextureCache['ant'];
+    const texture3 = Tiny.TextureCache['einstein'];
+    const sprite2 = new Tiny.Sprite(texture2);
+    const sprite3 = new Tiny.Sprite(texture3);
+    sprite2.setScale(0.5);
+    sprite3.setScale(0.5);
+    sprite2.setPosition(0, 400);
+    sprite3.setPosition(200, 400);
+
+    const scaleByFun = Tiny.ScaleBy(1000, Tiny.scale(2));
+    scaleByFun.onUpdate = function(tween, object) {
+      sprite3.setScale(tween.scaleX, tween.scaleY);
+      // 是为了确保在执行自定义的 onUpdate 回调函数之后，仍然执行其他可能已定义的更新操作函数。这样可以保证其他更新操作函数（如果有的话）仍然能够执行，以维持整个动画的正确状态
+      this._onUpdate.call(this, tween, object)
+    };
+    sprite2.runAction(scaleByFun);
+
+    this.addChild(sprite2);
+    this.addChild(sprite3);
+  }
+  initFadeInOrOutOrToSprite () {
+    const texture = Tiny.TextureCache['ant'];
+    const sprite = new Tiny.Sprite(texture);
+    sprite.setScale(0.5);
+    sprite.setPosition(0, 300);
+    // 1000毫秒显示出来
+    var action = Tiny.FadeIn(1000);
+    // 先设置为透明
+    sprite.setOpacity(0);
+    sprite.runAction(action);
+    setTimeout(() => {
+      // 2000毫秒全部隐藏
+      var action2 = Tiny.FadeOut(2000);
+      sprite.runAction(action2);
+    }, 1000);
+    setTimeout(() => {
+      // 1000毫秒变成0.5透明度
+      var action3 = Tiny.FadeTo(1000, 0.5);
+      sprite.runAction(action3);
+    }, 3000)
+    this.addChild(sprite);
+  }
+  initBlinkSprite() {
+    const texture = Tiny.TextureCache['ant'];
+    const sprite = new Tiny.Sprite(texture);
+    sprite.setScale(0.5);
+    sprite.setPosition(0, 250);
+    // 隐藏100ms，显示1000ms
+    var action = Tiny.Blink(100, 1000);
+    sprite.runAction(Tiny.Repeat(3, action));
+    this.addChild(sprite);
   }
   initJumpToSprite() {
     const texture = Tiny.TextureCache['ant'];
@@ -50,14 +123,14 @@ class MoveStage extends Tiny.Container {
     sprite.runAction(action);
     this.addChild(sprite);
   }
-  initMoveBySprite() {
+  initMoveByAndBackSprite() {
     const texture = Tiny.TextureCache['ant'];
     const sprite = new Tiny.Sprite(texture);
     sprite.setScale(0.5);
     sprite.setPosition(0, 50);
     // 基于原点移动多少
     const action = Tiny.MoveBy(3000, Tiny.point(120, 0));
-    sprite.runAction(action);
+    sprite.runAction(Tiny.Back(action));
     this.addChild(sprite);
   }
 }

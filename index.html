@@ -25,20 +25,6 @@
         </div>
     </div>
     <script type="module" src="./script/index.js"></script>
-    <script type="module">
-        import displayObjectStage from './stages/displayObject.js';
-        import moveStage from './stages/moveStage.js';
-
-        const scenes = {
-            'displayObjectStage': displayObjectStage,
-            'moveStage': moveStage,
-        }
-        document.addEventListener('click', (event) => {
-            if (event.target.role === 'button') {
-                const stage = new scenes[event.target.id]();
-                Tiny.app.replaceScene(stage);
-            }
-        })
-    </script>
+    <script type="module" src="./script/switchScene.js"></script>
 </body>
 </html>

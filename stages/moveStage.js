@@ -9,6 +9,48 @@ class MoveStage extends Tiny.Container {
     this.initBlinkSprite();
     this.initFadeInOrOutOrToSprite();
     this.eventsHandler();
+    this.runSequenceSprite();
+    this.initPauseOrResumeSprite();
+    this.initEasingSprite();
+  }
+  initEasingSprite() {
+    const texture = Tiny.TextureCache['ant'];
+    const sprite = new Tiny.Sprite(texture);
+    sprite.setScale(0.5);
+    sprite.setPosition(0, 550);
+    this.addChild(sprite);
+  }
+  initPauseOrResumeSprite() {
+    const texture = Tiny.TextureCache['ant'];
+    const sprite = new Tiny.Sprite(texture);
+    sprite.setScale(0.5);
+    sprite.setPosition(0, 500);
+    const moveByAction = Tiny.MoveBy(1000, Tiny.point(100, 0));
+    // 设置action延时
+    moveByAction.setDelay(1000);
+    sprite.runAction(Tiny.RepeatForever(Tiny.Back(moveByAction)));
+    sprite.setEventEnabled(true);
+    sprite.on('pointerdown', function() {
+      if (moveByAction.isPlaying()) {
+        moveByAction.pause();
+      } else {
+        moveByAction.resume();
+      }
+    });
+    this.addChild(sprite);
+  }
+  runSequenceSprite() {
+    const texture = Tiny.TextureCache['ant'];
+    const sprite = new Tiny.Sprite(texture);
+    sprite.setScale(0.5);
+    sprite.setPosition(0, 450 + sprite.height / 2);
+    sprite.setAnchor(0.5);
+    const moveAction = Tiny.MoveBy(1000, Tiny.point(100, 0));
+    const rotateAction = Tiny.RotateBy(1000, {rotation: Tiny.deg2radian(360)});
+    // runSequenceAction是顺序执行
+    // 如果换成runAction则是同时执行
+    sprite.runSequenceAction(moveAction, rotateAction);
+    this.addChild(sprite);
   }
   eventsHandler() {
     // onComplete

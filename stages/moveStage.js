@@ -12,12 +12,32 @@ class MoveStage extends Tiny.Container {
     this.runSequenceSprite();
     this.initPauseOrResumeSprite();
     this.initEasingSprite();
+    this.initInterpolationSprite();
   }
+  // 设置插值
+  initInterpolationSprite() {
+    const texture = Tiny.TextureCache['ant'];
+    const sprite = new Tiny.Sprite(texture);
+    sprite.setScale(0.5);
+    sprite.setPosition(0, 600);
+    // 表示运行时间为 1200ms x从0到屏幕宽度 再到100 y从屏幕高度减去120到屏幕高度
+    var action = Tiny.MoveTo(1200, {
+      x: [0, Tiny.WIN_SIZE.width, 100],
+      y: [Tiny.WIN_SIZE.height - 120],
+    });
+    action.setInterpolation(Tiny.TWEEN.Interpolation.Bezier);
+    sprite.runAction(action);
+    this.addChild(sprite);
+  }
+  // 动画缓冲
   initEasingSprite() {
     const texture = Tiny.TextureCache['ant'];
     const sprite = new Tiny.Sprite(texture);
     sprite.setScale(0.5);
     sprite.setPosition(0, 550);
+    const action = Tiny.MoveBy(2000, Tiny.point(500, 0));
+    action.setEasing(Tiny.TWEEN.Easing.Exponential.InOut);
+    sprite.runAction(action)
     this.addChild(sprite);
   }
   initPauseOrResumeSprite() {
